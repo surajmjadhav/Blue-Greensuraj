@@ -13,10 +13,12 @@ spec:
   selector:
     matchLabels:
       app: nginx
+      track: active
   template:
     metadata:
       labels:
         app: nginx
+        track: active
     spec:
       containers:
       - name: nginx
