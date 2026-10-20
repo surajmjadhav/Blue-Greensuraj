@@ -1,19 +1,22 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: nginx-demo
+  name: nginx-rollout
   namespace: demo-app
-  labels:
-    app: nginx-demo
 spec:
   replicas: 2
+  strategy:
+    blueGreen:
+      activeService: nginx-service-active
+      previewService: nginx-service-preview
+      autoPromotionEnabled: false
   selector:
     matchLabels:
-      app: nginx-demo
+      app: nginx
   template:
     metadata:
       labels:
-        app: nginx-demo
+        app: nginx
     spec:
       containers:
       - name: nginx
@@ -29,8 +32,8 @@ spec:
             cpu: "50m"
         volumeMounts:
         - name: html-volume
-          mountPath: /usr/share/nginx/html   # <-- Yeh line add karni hai
+          mountPath: /usr/share/nginx/html
       volumes:
       - name: html-volume
         configMap:
-          name: nginx-index-html            # <-- Yeh volume add karna hai
+          name: nginx-index-html
